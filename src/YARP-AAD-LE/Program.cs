@@ -3,6 +3,7 @@ using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+builder.Services.AddLettuceEncrypt().PersistCertificatesToAzureKeyVault();
 builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration);
 builder.Services.AddAuthorization(options =>
 {
@@ -12,6 +13,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 var app = builder.Build();
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.MapReverseProxy();
 
