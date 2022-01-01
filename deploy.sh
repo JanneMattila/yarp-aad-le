@@ -90,6 +90,7 @@ echo $azureADAppJson
 tenantId=$(echo $accountJson | jq -r .tenantId)
 tenantName=$(az rest --method get --url https://graph.microsoft.com/v1.0/domains | jq -r '.value[] | select(.isDefault == true) | {id}[]')
 clientId=$(echo $azureADAppJson | jq -r .appId)
+objectId=$(echo $azureADAppJson | jq -r .objectId)
 
 echo $tenantId
 echo $tenantName
@@ -127,4 +128,5 @@ az container show --name $aciName --resource-group $resourceGroup
 az container logs --name $aciName --resource-group $resourceGroup
 
 # Wipe out the resources
+az ad app delete --id $objectId
 az group delete --name $resourceGroup -y
