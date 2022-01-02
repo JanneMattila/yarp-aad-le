@@ -44,16 +44,10 @@ keyvault=$(echo $keyvaultJson | jq -r .properties.vaultUri)
 echo $keyvaultid
 echo $keyvault
 
-# Grant "Key Vault Certificates Officer" and 
-#       "Key Vault Secrets User" for our managed identity
+# Grant "Key Vault Administrator" for our managed identity
 # https://docs.microsoft.com/en-us/azure/key-vault/general/rbac-guide
 az role assignment create \
-  --role "Key Vault Certificates Officer" \
-  --assignee-object-id $identityobjectid \
-  --assignee-principal-type ServicePrincipal \
-  --scope $keyvaultid
-az role assignment create \
-  --role "Key Vault Secrets User" \
+  --role "Key Vault Administrator" \
   --assignee-object-id $identityobjectid \
   --assignee-principal-type ServicePrincipal \
   --scope $keyvaultid
