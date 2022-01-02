@@ -15,14 +15,12 @@ builder.Services.AddLettuceEncrypt().PersistCertificatesToAzureKeyVault();
 builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration);
 builder.Services.AddAuthorization(options =>
 {
-    options.FallbackPolicy = new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build();
+    options.AddPolicy("proxyPolicy", policy => policy.RequireAuthenticatedUser());
 });
-
 var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseAuthentication();
+app.UseAuthorization();
 app.MapReverseProxy();
 
 await app.RunAsync();
