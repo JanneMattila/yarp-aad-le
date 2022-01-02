@@ -115,7 +115,7 @@ az container create \
   --cpu 1 \
   --memory 1 \
   --resource-group $resourceGroup \
-  --environment-variables "KeyVault=$keyvault" \
+  --environment-variables "KeyVault=$keyvault" "https_port=443"
   --assign-identity $identityid \
   --dns-name-label $dnsNameLabel \
   --restart-policy Always \
@@ -127,6 +127,12 @@ az container show --name $aciName --resource-group $resourceGroup
 # Show the logs
 az container logs --name $aciName --resource-group $resourceGroup
 
+# Open browser to ACI address
+# - Validate that it proxies as excepted
+# - Validate that TLS works with proper certificate
+echo $fqdn
+
 # Wipe out the resources
 az ad app delete --id $objectId
 az group delete --name $resourceGroup -y
+az keyvault purge --name $keyvaultName # Otherwise it will be in "Deleted vaults" but name is reserved

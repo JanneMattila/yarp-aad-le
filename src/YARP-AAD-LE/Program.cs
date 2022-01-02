@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
-var keyvault = builder.Configuration["AzureAd"];
+var keyvault = builder.Configuration["Keyvault"];
 if(!string.IsNullOrEmpty(keyvault))
 {
     // Key Vault configured, so pull configuration from there
