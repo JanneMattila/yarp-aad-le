@@ -115,7 +115,7 @@ az container create \
   --cpu 1 \
   --memory 1 \
   --resource-group $resourceGroup \
-  --environment-variables "KeyVault=$keyvault" "https_port=443"
+  --environment-variables "KeyVault=$keyvault" "https_port=443" \
   --assign-identity $identityid \
   --dns-name-label $dnsNameLabel \
   --restart-policy Always \
