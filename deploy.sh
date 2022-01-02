@@ -9,7 +9,8 @@ location="westeurope"
 image="jannemattila/yarp-aad-le"
 
 dnsNameLabel="my-yarp-aad-le-demo"
-fqdn=$(echo "https://$dnsNameLabel.$location.azurecontainer.io")
+domainName=$(echo "$dnsNameLabel.$location.azurecontainer.io")
+fqdn=$(echo "https://$domainName")
 azureADAppName="my-yarp-aad-le-demo"
 
 # Login to Azure
@@ -98,7 +99,7 @@ az keyvault secret set --name "AzureAd--TenantId" --value $tenantId --vault-name
 az keyvault secret set --name "AzureAd--Domain" --value $tenantName --vault-name $keyvaultName
 az keyvault secret set --name "AzureAd--ClientId" --value $clientId --vault-name $keyvaultName
 az keyvault secret set --name "LettuceEncrypt--EmailAddress" --value $me --vault-name $keyvaultName
-az keyvault secret set --name "LettuceEncrypt--DomainNames--0" --value $fqdn --vault-name $keyvaultName
+az keyvault secret set --name "LettuceEncrypt--DomainNames--0" --value $domainName --vault-name $keyvaultName
 az keyvault secret set --name "LettuceEncrypt--AzureKeyVault--AzureKeyVaultEndpoint" --value $keyvault --vault-name $keyvaultName
 
 # Create ACI
