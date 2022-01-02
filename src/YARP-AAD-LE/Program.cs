@@ -1,8 +1,16 @@
 using Azure.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ConfigureHttpsDefaults(configureOptions =>
+    {
+        var appServices = serverOptions.ApplicationServices;
+        configureOptions.UseLettuceEncrypt(appServices);
+    });
+});
+
 var keyvault = builder.Configuration["Keyvault"];
 if(!string.IsNullOrEmpty(keyvault))
 {
