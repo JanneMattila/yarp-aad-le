@@ -6,7 +6,6 @@ identityName="yarp-aad-le-identity"
 keyvaultName="yarp-aad-le"
 resourceGroup="rg-yarp-aad-le"
 location="westeurope"
-image="jannemattila/yarp-aad-le"
 
 dnsNameLabel="my-yarp-aad-le-demo"
 domainName=$(echo "$dnsNameLabel.$location.azurecontainer.io")
@@ -95,6 +94,7 @@ echo $fqdn
 echo $keyvault
 
 # Store application configuration values to the Key Vault
+az keyvault secret set --name "AzureAd--Instance" --value "https://login.microsoftonline.com/" --vault-name $keyvaultName
 az keyvault secret set --name "AzureAd--TenantId" --value $tenantId --vault-name $keyvaultName
 az keyvault secret set --name "AzureAd--Domain" --value $tenantName --vault-name $keyvaultName
 az keyvault secret set --name "AzureAd--ClientId" --value $clientId --vault-name $keyvaultName
@@ -102,25 +102,37 @@ az keyvault secret set --name "LettuceEncrypt--EmailAddress" --value $me --vault
 az keyvault secret set --name "LettuceEncrypt--DomainNames--0" --value $domainName --vault-name $keyvaultName
 az keyvault secret set --name "LettuceEncrypt--AzureKeyVault--AzureKeyVaultEndpoint" --value $keyvault --vault-name $keyvaultName
 
+# You can also use following environment variables:
+# "Logging__LogLevel__LettuceEncrypt=Debug"
+# - Debug LettuceEncrypt
+# "LettuceEncrypt__AllowedChallengeTypes=Http01"
+# - Allow only http01 challenge type
+
 # Create ACI
 az container create \
   --name $aciName \
-  --image $image \
+  --image "jannemattila/yarp-aad-le:latest" \
   --ports 80 443 \
   --cpu 1 \
   --memory 1 \
   --resource-group $resourceGroup \
-  --environment-variables "KeyVault=$keyvault" "https_port=443" \
+  --environment-variables "KeyVault=$keyvault" "Logging__LogLevel__LettuceEncrypt=Debug" "LettuceEncrypt__AllowedChallengeTypes=Http01" "ASPNETCORE_URLS=http://*:80;https://*:443" \
   --assign-identity $identityid \
   --dns-name-label $dnsNameLabel \
   --restart-policy Always \
   --ip-address public
 
+# Show the logs
+az container logs --name $aciName --resource-group $resourceGroup
+
 # Show the properties
 az container show --name $aciName --resource-group $resourceGroup
 
-# Show the logs
-az container logs --name $aciName --resource-group $resourceGroup
+# Quick tests
+curl http://$domainName/ --verbose
+# -> Redirects to https
+curl https://$domainName/ --verbose
+# -> Redirect to Azure AD for auth
 
 # Open browser to ACI address
 # - Validate that it proxies as excepted
