@@ -34,7 +34,7 @@ jobs:
             ${{ env.repository }}:latest
             ${{ env.repository }}:${{ env.image }}
           build-args: |
-            ARCH=aarch64
+            ARCH=arm64v8
             
       - name: Digest
         run: echo ${{ steps.docker_hub_build.outputs.digest }}
