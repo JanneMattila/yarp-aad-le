@@ -39,7 +39,7 @@ Important [environment variables](https://docs.microsoft.com/en-us/dotnet/api/ov
 docker build . -t yarp-aad-le:latest
 
 # Run container using command
-docker run -p "2001:80" yarp-aad-le:latest
+docker run -p "2001:8080" yarp-aad-le:latest
 ``` 
 
 ### How to deploy to Azure Container Instances (ACI)

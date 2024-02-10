@@ -2,12 +2,12 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 ARG ARCH
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0.2-alpine3.17-$ARCH AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.1-alpine3.18-$ARCH AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0.102-alpine3.17-$ARCH AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.101-alpine3.18-$ARCH AS build
 WORKDIR /src
 COPY ["src/YARP-AAD-LE/YARP-AAD-LE.csproj", "src/YARP-AAD-LE/"]
 RUN dotnet restore "src/YARP-AAD-LE/YARP-AAD-LE.csproj"
